@@ -1,0 +1,64 @@
+### Lista usuários
+GET http://localhost:8080/api/users
+
+### Cadastrar Usuario 4
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "email": "player4@google.com",
+  "password": "pl@y3r4890",
+  "name": "Player Quatro"
+
+}
+
+### Cadastrar Usuario 3
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "email": "player3@google.com",
+  "password": "p",
+  "name": "Player Três"
+
+}
+
+### Listar usuario id = 1
+GET http://localhost:8080/api/users/1
+
+### Lista o próprio usuário
+GET http://localhost:8080/api/users/me
+Authorization: Bearer {{token}}
+
+### Deletar usuario id = #
+DELETE http://localhost:8080/api/users/2
+Authorization: Bearer {{token}}
+
+### Login do Usuario 4
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "player4@google.com",
+  "password": "pl@y3r4890"
+}
+> {%
+    client.global.set("token", response.body.token)
+    client.global.set("id", response.body.user.id)
+
+%}
+
+### Login do ADMIN
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "gamemaster@google.com",
+  "password": "gam3m@st3r0"
+}
+> {%
+    client.global.set("token", response.body.token)
+    client.global.set("id", response.body.user.id)
+
+%}
+
