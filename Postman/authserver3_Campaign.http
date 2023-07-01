@@ -1,14 +1,15 @@
 ### Lista campanhas
-GET http://localhost:8080/api/campaings
+GET http://localhost:8080/api/campaigns
 
 ### Buscar campanhas pelo Titulo
-GET http://localhost:8080/api/campaings/byTitle?title=Second
+GET http://localhost:8080/api/campaigns/byTitle?title=Second
 
 ### Buscar campanhas pelo Sistema de Regras
-GET http://localhost:8080/api/campaings/bySystemRules?systemRule=DAEM
+GET http://localhost:8080/api/campaigns/bySystemRules?systemRule=DAEM
 
 ### Cadastrar campanhas 1
-POST http://localhost:8080/api/campaings
+POST http://localhost:8080/api/campaigns
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -20,7 +21,8 @@ Content-Type: application/json
 }
 
 ### Cadastrar campanha 2
-POST http://localhost:8080/api/campaings
+POST http://localhost:8080/api/campaigns
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -31,7 +33,8 @@ Content-Type: application/json
 }
 
 ### Teste Cadastro campanha invalida
-POST http://localhost:8080/api/campaings
+POST http://localhost:8080/api/campaigns
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -41,17 +44,32 @@ Content-Type: application/json
   "maxPlayers": 9
 }
 
+### Teste Cadastro campanha Sem autorização
+POST http://localhost:8080/api/campaigns
+Content-Type: application/json
+
+{
+  "title": "Unauthorized Quest",
+  "systemRules": "Gurps",
+  "password": "AllWorldSkills",
+  "maxPlayers": 9
+}
+
 ### Listar campanha id = #
-GET http://localhost:8080/api/campaings/5
+GET http://localhost:8080/api/campaigns/5
 
 
 
-### Lista o próprio usuário
-GET http://localhost:8080/api/users/me
+### Deletar Campanha = #
+DELETE http://localhost:8080/api/campaigns/1
 Authorization: Bearer {{token}}
 
-### Deletar usuario id = #
-DELETE http://localhost:8080/api/users/2
+### Inserir usuário na campanha = #
+PUT http://localhost:8080/api/campaigns/user?idCampaing=1&idUser=3&action=add
+Authorization: Bearer {{token}}
+
+### Remover usuário na campanha = #
+PUT http://localhost:8080/api/campaigns/user?idCampaing=1&idUser=1&action=remove
 Authorization: Bearer {{token}}
 
 ### Login do Usuario 4

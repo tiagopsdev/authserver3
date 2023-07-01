@@ -60,7 +60,7 @@ class UsersController(val service: UsersService) {
     @DeleteMapping("/{id}")
     //@PreAuthorize("hasRole('ADMIN')")
     @PreAuthorize("permitAll()")
-@SecurityRequirement(name = "authserver3")
+    @SecurityRequirement(name = "authserver3")
     fun deleteUser(@PathVariable("id") id: Long): ResponseEntity<out Any> {
 
         return when (service.deleteUser(id)) {

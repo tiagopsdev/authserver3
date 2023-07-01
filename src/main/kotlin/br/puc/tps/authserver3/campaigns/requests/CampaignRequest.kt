@@ -16,8 +16,6 @@ data class CampaignRequest(
     @field:NotBlank
     var systemRules: String?,
     @field:NotBlank
-    var master: String?,
-    @field:NotBlank
     @field:Size(min = 12, max = 48)
     //@Pattern("^[A-Za-z!@#\$%&*]+\$\n")
     var password: String?,

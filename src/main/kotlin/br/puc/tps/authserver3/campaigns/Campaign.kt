@@ -1,14 +1,7 @@
 package br.puc.tps.authserver3.campaigns
 
 import br.puc.tps.authserver3.users.User
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.JoinTable
-import jakarta.persistence.ManyToMany
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 
@@ -23,8 +16,9 @@ class Campaign(
     var title: String,
     @Column(nullable = false)
     var systemRules: String,
-    @Column(nullable = false)
-    var master: String,
+    @ManyToOne
+    @JoinColumn(name = "master_id")
+    var master: User,
     @Column(length = 48)
     var password: String,
     @Column(nullable = false)
@@ -38,7 +32,11 @@ class Campaign(
         inverseJoinColumns = [JoinColumn(name="idUser")]
 
     )
-    var Users: MutableSet<User> = mutableSetOf()
+    var users: MutableSet<User> = mutableSetOf()
 
 
-    )
+    ){
+
+    constructor() : this(null, "", "", User(), "",  0, mutableSetOf())
+
+}
