@@ -137,19 +137,19 @@ class CampaignsServiceTest {
 
     }
 
-    /*@Test
+    @Test
     fun `Should add user`() {
 
-        var campaign = campaignStub(id=1L)
+        var campaign = campaignStub(id = 1L)
         every { campaingsRepositoryMock.findByIdOrNull(1) } returns campaign
         every { usersRepositoryMock.findByIdOrNull(2) } returns userStub(2L)
 
-        justRun { campaingsRepositoryMock.save(campaign)}
+        justRun { campaingsRepositoryMock.save(campaign) }
         service.updateUserCampaign(idCampaign = 1L, idUser = 2L, action = "add", loggedUserID = 1L) shouldBe true
 
-    }*/
+    }
 
-   /* @Test
+    @Test
     fun `Should remove user`() {
 
         var campaign = campaignStub(id=1L)
@@ -162,7 +162,7 @@ class CampaignsServiceTest {
         service.updateUserCampaign()
         service.deletecampaingById(1L, 1L) shouldBe true
 
-    }*/
+    }
     /*fun updateUserCampaign(idCampaign: Long, idUser: Long, action: String, loggedUserID: Long): Boolean {
 
         var campaign = campaingsRepository.findByIdOrNull(idCampaign)
