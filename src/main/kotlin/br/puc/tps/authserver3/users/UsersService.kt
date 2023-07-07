@@ -26,6 +26,7 @@ class UsersService(
             ?:throw IllegalStateException("Role 'USER' note Found")
 
         user.roles.add(userRole)
+        log.info("User id={} name={} Added as Role=({})", user.id, user.name, user.roles.joinToString(" | "))
         return repository.save(user)
 
 

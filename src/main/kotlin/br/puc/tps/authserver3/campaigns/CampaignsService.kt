@@ -1,29 +1,43 @@
 package br.puc.tps.authserver3.campaigns
 
 import br.puc.tps.authserver3.campaigns.requests.CampaignRequest
-import br.puc.tps.authserver3.exception.MUnespectNullException
+import br.puc.tps.authserver3.exception.*
+import br.puc.tps.authserver3.systemrules.SystemRulesRepository
 import br.puc.tps.authserver3.users.UsersRepository
+import br.puc.tps.authserver3.users.UsersService
+import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
 class CampaignsService(
     val campaingsRepository: CampaingsRepository,
-    val usersRepository: UsersRepository
+    val usersRepository: UsersRepository,
+    val srRepository: SystemRulesRepository
 ) {
 
-    fun save(req: CampaignRequest, userid: Long): Campaign{
+    companion object {
 
-        var user = usersRepository.findByIdOrNull(userid) ?: throw MUnespectNullException("Should the logged user been found here")
+        val log = LoggerFactory.getLogger(CampaignsService::class.java)
+
+
+    }
+    fun save(req: CampaignRequest, userid: Long): Campaign {
+
+        var user = usersRepository.findByIdOrNull(userid)
+            ?: throw MUnespectNullException("Should the logged user been found here")
         var master = user
+        var systemRule = srRepository.findSystemRuleByName(req.systemRule!!)
+            ?: throw BadRequestException(message = "System Rule not found")
         var cp = Campaign(
             title = req.title!!,
-            systemRules = req.systemRules!!,
+            systemRule = systemRule,
             master = master,
             password = req.password!!,
             maxPlayers = req.maxPlayers!!,
         )
         cp.users.add(user)
+        log.info("User id={} name={} master={}", cp.id, cp.title, cp.master.name)
 
         return campaingsRepository.save(cp)
     }
@@ -39,55 +53,68 @@ class CampaignsService(
 
     fun getByTitleContains(str: String?): List<Campaign>? {
 
-        if (str == null || str.isEmpty())  return campaingsRepository.findAll()
+        if (str == null || str.isEmpty()) return campaingsRepository.findAll()
         val words: List<String> = str.split("\n")
         val campaigns: MutableList<Campaign> = mutableListOf()
-        for (w in words){
-            campaingsRepository.findCampaignByTitleContainsIgnoreCase(w)?.let { campaigns.addAll(it)}
+        for (w in words) {
+            campaingsRepository.findCampaignByTitleContainsIgnoreCase(w)?.let { campaigns.addAll(it) }
         }
         return campaigns.toList()
 
 
     }
 
-    fun findAllBySystemRules(sr: String?) = campaingsRepository.findAllBySystemRules(sr)
+    fun findAllBySystemRules(sr: String?): List<Campaign> {
+        var campaignList =  campaingsRepository.findAllBySystemRules(sr)
+        if (campaignList.isEmpty()) throw NotFoundException("Campaign", "Not found Campaing with System Rules ${sr}")
+        return campaignList
+    }
 
     fun deletecampaingById(id: Long, loggedUserID: Long): Boolean {
 
-        var campaign = campaingsRepository.findByIdOrNull(id) ?: return false //Not Found
-        if (campaign.master.id != loggedUserID) return false //Not the Owner
-        if (campaign.users.size > 1) return false // Not Empty
+        var campaign =
+            campaingsRepository.findByIdOrNull(id)
+                ?: throw NotFoundException("Campaign", "${id}", "Not found Campaing")
+        if (campaign.master.id != loggedUserID)
+            throw UnauthorizedRequestException(message = "Not the owner")
+        if (campaign.users.size > 1)
+            throw ForbiddenException("The Capaign ${campaign.title} has more then one player and Don't, Left ${campaign.users.size - 1} to leave this campaigns")
         campaingsRepository.deleteById(id)
-        return true //@Todo("Execptions")
-
+        log.warn("Campaign {} deleted!", campaign.id)
+        return true
 
     }
 
     fun updateUserCampaign(idCampaign: Long, idUser: Long, action: String, loggedUserID: Long): Boolean {
 
-        var campaign = campaingsRepository.findByIdOrNull(idCampaign) ?: return false //Campaign Not Found
-        if (campaign.master.id != loggedUserID) return false //Not the Owner
-        val user = usersRepository.findByIdOrNull(idUser) ?: return false //User not Found
+        var campaign = campaingsRepository.findByIdOrNull(idCampaign)
+            ?: throw NotFoundException("Campaign", "${idCampaign}", "Not found Campaing")
+        if (campaign.master.id != loggedUserID) throw UnauthorizedRequestException(message = "Not the owner")
+        val user =
+            usersRepository.findByIdOrNull(idUser) ?: throw NotFoundException("User", "${idUser}", "Not found User")
         if (action == "add") {
 
-            if (campaign.users.contains(user)) return true //User already inserted
+            if (campaign.users.contains(user)) return true
             campaign.users.add(user)
             campaingsRepository.save(campaign)
             return true //@Todo("Execptions, Reduzir número de chamadas para o banco")
-        }else if (action == "remove"){
+        } else if (action == "remove") {
 
-            if (!(campaign.users.contains(user))) return true //User not find in campaign
+            if (!(campaign.users.contains(user))) throw NotFoundException(
+                "Campaign",
+                "${idUser}",
+                "Not found User in a Campaing"
+            )
             campaign.users.remove(user)
             campaingsRepository.save(campaign)
-            return true //@Todo("Execptions, Reduzir número de chamadas para o banco")
+            log.info("Action - {}, User {}, Campaing {}", action, idUser, idCampaign)
+            //return true //@Todo("Execptions, Reduzir número de chamadas para o banco")
 
         }
 
 
-        return TODO("Provide the return value")
+        throw BadRequestException("$action is not reckonized as a valid parameter")
     }
-
-
 
 
 }

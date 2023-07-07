@@ -1,0 +1,67 @@
+### Cadastrar Usuario 4
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "email": "player4@google.com",
+  "password": "pl@y3r4890",
+  "name": "Player Quatro"
+
+}
+
+### Login do ADMIN
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "gamemaster@google.com",
+  "password": "gam3m@st3r0"
+}
+> {%
+    client.global.set("token", response.body.token)
+    client.global.set("id", response.body.user.id)
+
+%}
+
+### Cadastrar campanhas 1
+POST http://localhost:8080/api/campaigns
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "First Quest",
+  "systemRule": "DAEMON",
+  "password": "secretpassword",
+  "maxPlayers": 4
+
+}
+
+### Login do Usuario 4
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "player4@google.com",
+  "password": "pl@y3r4890"
+}
+> {%
+    client.global.set("token", response.body.token)
+    client.global.set("id", response.body.user.id)
+
+%}
+
+### Cadastrar campanha 2
+POST http://localhost:8080/api/campaigns
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Second Quest",
+  "systemRule": "DND",
+  "password": "beholdbeholder",
+  "maxPlayers": 6
+}
+
+### Deletar Campanha = #
+DELETE http://localhost:8080/api/campaigns/1
+Authorization: Bearer {{token}}

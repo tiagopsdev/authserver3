@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy.STATELESS
 import org.springframework.security.web.DefaultSecurityFilterChain
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
@@ -44,7 +45,7 @@ class SecurityConfig(private val jwtTokenFilter: JwtTokenFilter) {
                     .requestMatchers(HttpMethod.GET).permitAll()
                     .requestMatchers("/error/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/users", "/users/login", "/campaings").permitAll()
-                    .requestMatchers("/h2-console/**").permitAll()
+                    .requestMatchers(antMatcher("/h2-console/**")).permitAll()
                     .anyRequest().authenticated()
             }
             .addFilterBefore(jwtTokenFilter, BasicAuthenticationFilter::class.java)

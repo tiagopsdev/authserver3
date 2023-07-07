@@ -7,7 +7,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.ManyToMany
 
 @Entity
-open class Role (
+class Role (
 
     @Id @GeneratedValue
     val id: Long? = null,

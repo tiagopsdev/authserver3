@@ -5,7 +5,7 @@ GET http://localhost:8080/api/campaigns
 GET http://localhost:8080/api/campaigns/byTitle?title=Second
 
 ### Buscar campanhas pelo Sistema de Regras
-GET http://localhost:8080/api/campaigns/bySystemRules?systemRule=DAEM
+GET http://localhost:8080/api/campaigns/bySystemRules?systemRule=DAEMON123
 
 ### Cadastrar campanhas 1
 POST http://localhost:8080/api/campaigns
@@ -14,7 +14,7 @@ Content-Type: application/json
 
 {
   "title": "First Quest",
-  "systemRules": "DAEMON",
+  "systemRule": "DAEMON",
   "password": "secretpassword",
   "maxPlayers": 4
 
@@ -27,7 +27,7 @@ Content-Type: application/json
 
 {
   "title": "Second Quest",
-  "systemRules": "D&D",
+  "systemRule": "DND",
   "password": "beholdbeholder",
   "maxPlayers": 6
 }
@@ -65,38 +65,9 @@ DELETE http://localhost:8080/api/campaigns/1
 Authorization: Bearer {{token}}
 
 ### Inserir usuário na campanha = #
-PUT http://localhost:8080/api/campaigns/user?idCampaing=1&idUser=3&action=add
+PUT http://localhost:8080/api/campaigns/user?idCampaing=1&idUser=2&action=add
 Authorization: Bearer {{token}}
 
 ### Remover usuário na campanha = #
 PUT http://localhost:8080/api/campaigns/user?idCampaing=1&idUser=1&action=remove
 Authorization: Bearer {{token}}
-
-### Login do Usuario 4
-POST http://localhost:8080/api/users/login
-Content-Type: application/json
-
-{
-  "email": "player4@google.com",
-  "password": "pl@y3r4890"
-}
-> {%
-    client.global.set("token", response.body.token)
-    client.global.set("id", response.body.user.id)
-
-%}
-
-### Login do ADMIN
-POST http://localhost:8080/api/users/login
-Content-Type: application/json
-
-{
-  "email": "gamemaster@google.com",
-  "password": "gam3m@st3r0"
-}
-> {%
-    client.global.set("token", response.body.token)
-    client.global.set("id", response.body.user.id)
-
-%}
-

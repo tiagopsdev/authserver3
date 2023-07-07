@@ -1,9 +1,8 @@
 package br.puc.tps.authserver3.campaigns
 
+import br.puc.tps.authserver3.systemrules.SystemRule
 import br.puc.tps.authserver3.users.User
 import jakarta.persistence.*
-import jakarta.validation.constraints.NotNull
-import jakarta.validation.constraints.Size
 
 @Entity
 @Table(name = "tblCampaign")
@@ -14,8 +13,11 @@ class Campaign(
 
     @Column(nullable = false)
     var title: String,
-    @Column(nullable = false)
-    var systemRules: String,
+    @ManyToOne
+    @JoinColumn(
+        name = "systemrules_id",
+        nullable = false)
+    var systemRule: SystemRule,
     @ManyToOne
     @JoinColumn(name = "master_id")
     var master: User,
@@ -37,6 +39,6 @@ class Campaign(
 
     ){
 
-    constructor() : this(null, "", "", User(), "",  0, mutableSetOf())
+    constructor() : this(null, "", SystemRule(), User(), "",  0, mutableSetOf())
 
 }

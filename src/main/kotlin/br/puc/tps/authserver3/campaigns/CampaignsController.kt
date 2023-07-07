@@ -86,7 +86,7 @@ class CampaignsController(val service: CampaignsService) {
         var usersResplist = mutableListOf<UserResponse>()
         users.forEach { user -> usersResplist.add(user.toResponse()) }
 
-        return CampaignResponse(id!!, title, systemRules, master.name, maxPlayers, users.size.toLong(), usersResplist.toList())
+        return CampaignResponse(id!!, title, systemRule.name, master.name, maxPlayers, users.size.toLong(), usersResplist.toList())
     }
 
 

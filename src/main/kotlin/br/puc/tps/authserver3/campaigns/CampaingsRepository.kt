@@ -12,9 +12,10 @@ interface CampaingsRepository: JpaRepository<Campaign, Long>{
     fun findCampaignByTitleContainsIgnoreCase(word: String): MutableList<Campaign>?
 
     @Query(value = "select c from Campaign c " +
-            "where c.systemRules = :sr"+
-            " order by c.maxPlayers desc ")
-    fun findAllBySystemRules(sr: String?): List<Campaign>?
+            "join c.systemRule s " +
+            "WHERE s.name LIKE CONCAT('%', :sr, '%') " +
+            "order by c.maxPlayers desc ")
+    fun findAllBySystemRules(sr: String?): List<Campaign>
 
 
 
