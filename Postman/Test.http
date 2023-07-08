@@ -1,3 +1,9 @@
+### Lista usuários
+GET http://localhost:8080/api/users
+
+### Lista campanhas
+GET http://localhost:8080/api/campaigns
+
 ### Cadastrar Usuario 4
 POST http://localhost:8080/api/users
 Content-Type: application/json
@@ -22,6 +28,10 @@ Content-Type: application/json
     client.global.set("id", response.body.user.id)
 
 %}
+
+### Lista o próprio usuário
+GET http://localhost:8080/api/users/me
+Authorization: Bearer {{token}}
 
 ### Cadastrar campanhas 1
 POST http://localhost:8080/api/campaigns
@@ -62,6 +72,18 @@ Content-Type: application/json
   "maxPlayers": 6
 }
 
-### Deletar Campanha = #
+### Deletar Campanha = # Proibido por ser a campanha do admin
 DELETE http://localhost:8080/api/campaigns/1
+Authorization: Bearer {{token}}
+
+### Inserir usuário na campanha = #
+PUT http://localhost:8080/api/campaigns/user?idCampaing=3&idUser=1&action=add
+Authorization: Bearer {{token}}
+
+### Deletar Campanha = # Prodibido pois tem mais de 1 usuário na campanha
+DELETE http://localhost:8080/api/campaigns/2
+Authorization: Bearer {{token}}
+
+### Remover usuário na campanha = #
+PUT http://localhost:8080/api/campaigns/user?idCampaing=2&idUser=1&action=remove
 Authorization: Bearer {{token}}

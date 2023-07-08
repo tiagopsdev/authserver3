@@ -1,11 +1,14 @@
+### Lista usuários
+GET http://localhost:8080/api/users
+
 ### Lista campanhas
 GET http://localhost:8080/api/campaigns
 
 ### Buscar campanhas pelo Titulo
-GET http://localhost:8080/api/campaigns/byTitle?title=Second
+GET http://localhost:8080/api/campaigns/byTitle?title=Quest
 
 ### Buscar campanhas pelo Sistema de Regras
-GET http://localhost:8080/api/campaigns/bySystemRules?systemRule=DAEMON123
+GET http://localhost:8080/api/campaigns/bySystemRules?systemRule=D
 
 ### Cadastrar campanhas 1
 POST http://localhost:8080/api/campaigns
@@ -39,7 +42,7 @@ Content-Type: application/json
 
 {
   "title": "Any Quest",
-  "systemRules": "AnySystem",
+  "systemRules": "ystem",
   "password": "AnyPassword123",
   "maxPlayers": 9
 }
@@ -56,7 +59,7 @@ Content-Type: application/json
 }
 
 ### Listar campanha id = #
-GET http://localhost:8080/api/campaigns/5
+GET http://localhost:8080/api/campaigns/1
 
 
 

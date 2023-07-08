@@ -68,7 +68,7 @@ class CampaignsServiceTest {
     }
 
     @Test
-    fun `Should throw exeption if campaign wasn't found before add or rem user`() {
+    fun `Should throw exception if campaign wasn't found before add or rem user`() {
 
         every { campaingsRepositoryMock.findByIdOrNull(1) } returns null
         assertThrows<NotFoundException> {
@@ -136,15 +136,30 @@ class CampaignsServiceTest {
         }
 
     }
+    @Test
+    fun `Should throw exception if user was not found in campaign`() {
+
+        var cp = campaignStub(id=1L)
+        var user = userStub(10)
+        every { campaingsRepositoryMock.findByIdOrNull(1) } returns cp
+        every { usersRepositoryMock.findByIdOrNull(10) } returns user
+
+        assertThrows<NotFoundException> {
+
+            service.updateUserCampaign(idCampaign = 1L, idUser = 10L, action = "remove", loggedUserID = 1L) shouldBe true
+
+        }
+
+    }
 
     @Test
     fun `Should add user`() {
 
-        var campaign = campaignStub(id = 1L)
-        every { campaingsRepositoryMock.findByIdOrNull(1) } returns campaign
+        var cp = campaignStub(id = 1L)
+        every { campaingsRepositoryMock.findByIdOrNull(1) } returns cp
         every { usersRepositoryMock.findByIdOrNull(2) } returns userStub(2L)
 
-        justRun { campaingsRepositoryMock.save(campaign) }
+        every { campaingsRepositoryMock.save(cp) } returns cp
         service.updateUserCampaign(idCampaign = 1L, idUser = 2L, action = "add", loggedUserID = 1L) shouldBe true
 
     }
@@ -152,15 +167,15 @@ class CampaignsServiceTest {
     @Test
     fun `Should remove user`() {
 
-        var campaign = campaignStub(id=1L)
-        var user = campaign.users.elementAt(0)
-        every { campaingsRepositoryMock.findByIdOrNull(1) } returns campaign
-        every { usersRepositoryMock.findByIdOrNull(1) } returns user
+        var cp = campaignStub(id=1L)
+        var user = cp.users.elementAt(0)
+        every { campaingsRepositoryMock.findByIdOrNull(1) } returns cp
+        every { usersRepositoryMock.findByIdOrNull(2) } returns user
 
-        every { campaingsRepositoryMock.save(campaign)} returns campaign
+        every { campaingsRepositoryMock.save(cp)} returns cp
 
-        service.updateUserCampaign()
-        service.deletecampaingById(1L, 1L) shouldBe true
+        service.updateUserCampaign(idCampaign = 1L, idUser = 2L, action = "remove", loggedUserID = 1L) shouldBe true
+
 
     }
     /*fun updateUserCampaign(idCampaign: Long, idUser: Long, action: String, loggedUserID: Long): Boolean {

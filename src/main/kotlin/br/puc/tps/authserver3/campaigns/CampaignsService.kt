@@ -108,7 +108,7 @@ class CampaignsService(
             campaign.users.remove(user)
             campaingsRepository.save(campaign)
             log.info("Action - {}, User {}, Campaing {}", action, idUser, idCampaign)
-            //return true //@Todo("Execptions, Reduzir número de chamadas para o banco")
+            return true //@Todo("Execptions, Reduzir número de chamadas para o banco")
 
         }
 

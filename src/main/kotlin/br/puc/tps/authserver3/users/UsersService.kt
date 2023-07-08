@@ -54,7 +54,7 @@ class UsersService(
         val user = repository.findByIdOrNull(id)?: return -1
 
         if (user.roles.any { it.name == "ADMIN" }){
-            val count = repository.findAllByRoles("ADMIM").size
+            val count = repository.findAllByRoles(role = "ADMIM").size
             if (count == 1) throw BadRequestException("Cannot delete the last system Admin!")
         }
         log.warn("Usuario deletado id={} name={}", user.id, user.name)
